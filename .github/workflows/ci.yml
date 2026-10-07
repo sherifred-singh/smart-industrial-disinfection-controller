@@ -1,0 +1,97 @@
+name: Embedded Firmware CI & Unit Test Suite
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: GCC Native Build, Static Analysis & Automated Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Build Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc make cppcheck
+
+      - name: Static Code Analysis (cppcheck)
+        run: |
+          cppcheck --enable=all --suppress=missingIncludeSystem --error-exitcode=1 \
+            -I firmware/hal -I firmware/drivers -I firmware/services -I firmware/app \
+            firmware/
+
+      - name: Compile and Run Automated Test Suites
+        run: |
+          gcc -std=c99 -Wall -Wextra -Werror -pedantic \
+            -I firmware/hal \
+            -I firmware/drivers \
+            -I firmware/services \
+            -I firmware/app \
+            -I tests/unity \
+            tests/test_runner.c \
+            tests/unity/unity.c \
+            tests/unit/test_ring_buffer.c \
+            tests/unit/test_crc16.c \
+            tests/unit/test_filter_service.c \
+            tests/unit/test_config_manager.c \
+            tests/unit/test_alarm_fault.c \
+            tests/unit/test_modbus_rtu.c \
+            tests/unit/test_app_fsm.c \
+            tests/integration/test_sensor_to_fsm.c \
+            tests/integration/test_modbus_to_config.c \
+            tests/system/test_full_cycle.c \
+            firmware/port/host_sim/hal_gpio_sim.c \
+            firmware/port/host_sim/hal_timer_sim.c \
+            firmware/port/host_sim/hal_adc_sim.c \
+            firmware/port/host_sim/hal_uart_sim.c \
+            firmware/port/host_sim/hal_nvm_sim.c \
+            firmware/port/host_sim/hal_watchdog_sim.c \
+            firmware/services/ring_buffer.c \
+            firmware/services/crc16.c \
+            firmware/services/filter_service.c \
+            firmware/services/config_manager.c \
+            firmware/services/alarm_fault_manager.c \
+            firmware/services/event_logger.c \
+            firmware/services/modbus_rtu_slave.c \
+            firmware/drivers/sensor_driver.c \
+            firmware/drivers/actuator_driver.c \
+            firmware/drivers/nvm_driver.c \
+            firmware/app/app_fsm.c \
+            firmware/app/process_controller.c \
+            -o test_runner
+
+          ./test_runner
+
+      - name: Build Interactive CLI Simulation Binary
+        run: |
+          gcc -std=c99 -Wall -Wextra -Werror \
+            -I firmware/hal \
+            -I firmware/drivers \
+            -I firmware/services \
+            -I firmware/app \
+            tools/sim_cli/main_sim.c \
+            firmware/port/host_sim/hal_gpio_sim.c \
+            firmware/port/host_sim/hal_timer_sim.c \
+            firmware/port/host_sim/hal_adc_sim.c \
+            firmware/port/host_sim/hal_uart_sim.c \
+            firmware/port/host_sim/hal_nvm_sim.c \
+            firmware/port/host_sim/hal_watchdog_sim.c \
+            firmware/services/ring_buffer.c \
+            firmware/services/crc16.c \
+            firmware/services/filter_service.c \
+            firmware/services/config_manager.c \
+            firmware/services/alarm_fault_manager.c \
+            firmware/services/event_logger.c \
+            firmware/services/modbus_rtu_slave.c \
+            firmware/drivers/sensor_driver.c \
+            firmware/drivers/actuator_driver.c \
+            firmware/drivers/nvm_driver.c \
+            firmware/app/app_fsm.c \
+            firmware/app/process_controller.c \
+            -o sim_cli
