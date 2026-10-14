@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "hal_uart.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,7 +83,7 @@ void modbus_rtu_init(void);
  * @brief Push a received raw serial byte into the Modbus RX engine.
  * Typically called from UART RX ISR.
  */
-void modbus_rtu_on_byte_received(uint8_t byte);
+void modbus_rtu_on_byte_received(hal_uart_port_t port, uint8_t byte);
 
 /**
  * @brief Process Modbus state machine & frame parsing (Call periodically in 1ms/10ms loop).

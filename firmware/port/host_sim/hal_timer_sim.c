@@ -1,3 +1,6 @@
+#define _POSIX_C_SOURCE 199309L
+#define _DEFAULT_SOURCE
+
 /**
  * @file hal_timer_sim.c
  * @brief Host Simulation Implementation for System Timing & Tick

@@ -70,11 +70,12 @@ void modbus_rtu_init(void)
     uint32_t bauds[4] = {9600, 19200, 38400, 115200};
     uint32_t baud = (cfg->modbus_baud_idx < 4) ? bauds[cfg->modbus_baud_idx] : 19200;
 
-    hal_uart_init(HAL_UART_PORT_MODBUS, baud, (hal_uart_rx_callback_t)modbus_rtu_on_byte_received);
+    hal_uart_init(HAL_UART_PORT_MODBUS, baud, modbus_rtu_on_byte_received);
 }
 
-void modbus_rtu_on_byte_received(uint8_t byte)
+void modbus_rtu_on_byte_received(hal_uart_port_t port, uint8_t byte)
 {
+    (void)port;
     ring_buffer_push(&s_rx_ring, byte);
     s_last_byte_time_ms = hal_timer_get_ms();
 }
