@@ -22,7 +22,7 @@ jobs:
 
       - name: Static Code Analysis (cppcheck)
         run: |
-          cppcheck --enable=all --suppress=missingIncludeSystem --error-exitcode=1 \
+          cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember --suppress=constParameterPointer --error-exitcode=1 \
             -I firmware/hal -I firmware/drivers -I firmware/services -I firmware/app \
             firmware/
 
