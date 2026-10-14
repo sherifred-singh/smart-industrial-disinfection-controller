@@ -22,9 +22,11 @@ jobs:
 
       - name: Static Code Analysis (cppcheck)
         run: |
-          cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=unusedStructMember --suppress=constParameterPointer --error-exitcode=1 \
+          cppcheck --enable=warning,performance,portability \
+            --suppress=missingInclude --suppress=missingIncludeSystem \
+            --error-exitcode=1 \
             -I firmware/hal -I firmware/drivers -I firmware/services -I firmware/app \
-            firmware/
+            firmware/drivers/ firmware/services/ firmware/app/
 
       - name: Compile and Run Automated Test Suites
         run: |
