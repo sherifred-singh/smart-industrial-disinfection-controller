@@ -12,7 +12,7 @@ Designed from the ground up with a strict **4-layer architecture** (HAL $\righta
 
 ---
 
-## ðŸ“‘ Table of Contents
+## Table of Contents
 
 - [1. System Overview & Problem Statement](#1-system-overview--problem-statement)
 - [2. Key Technical Features](#2-key-technical-features)
