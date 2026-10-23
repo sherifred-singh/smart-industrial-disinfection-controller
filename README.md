@@ -1,4 +1,4 @@
-﻿# Smart Industrial Disinfection & Environment Monitoring Controller
+# Smart Industrial Disinfection & Environment Monitoring Controller
 
 [![C/C++ CI Test Suite](https://img.shields.io/badge/CI%20Build-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/sherifred-singh/smart-industrial-disinfection-controller/actions)
 [![Language](https://img.shields.io/badge/Language-Embedded%20C%20(C99%2FC11)-00599C?style=for-the-badge&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
@@ -8,7 +8,7 @@
 
 > **Production-grade, modular, event-driven embedded firmware for industrial sterilization chambers, cleanroom decontamination units, and environmental safety monitors.**
 
-Designed from the ground up with a strict **4-layer architecture** (HAL $\rightarrow$ Drivers $\rightarrow$ Middleware/Services $\rightarrow$ Application), non-blocking multi-rate scheduling, **CRC-16** protected non-volatile configuration storage, dual-stage digital filtering, and a full **Modbus RTU Slave stack over RS-485**.
+Designed from the ground up with a strict **4-layer architecture** (HAL → Drivers → Middleware/Services → Application), non-blocking multi-rate scheduling, **CRC-16** protected non-volatile configuration storage, dual-stage digital filtering, and a full **Modbus RTU Slave stack over RS-485**.
 
 ---
 
@@ -120,7 +120,7 @@ stateDiagram-v2
 
     STATE_DISINFECTING --> STATE_DWELL_SOAK: Disinfect Expired (300s)
     STATE_DISINFECTING --> STATE_EMERGENCY_STOP: E-Stop / Door Breach / Gas Leak
-    STATE_DISINFECTING --> STATE_FAULT_LATCH: Over-Temp (>45Â°C) / Sensor Wire Break
+    STATE_DISINFECTING --> STATE_FAULT_LATCH: Over-Temp (>45°C) / Sensor Wire Break
     STATE_DISINFECTING --> STATE_POST_PURGE: STOP Command (Safe Purge Cancel)
 
     STATE_DWELL_SOAK --> STATE_POST_PURGE: Dwell Expired (120s)
@@ -182,7 +182,7 @@ graph TD
 | `HAL_GPIO_OUT_DISINFECT_RELAY`| `PA8` | Digital Output PP | Disinfection Actuator Relay | Low (De-energized) |
 | `HAL_GPIO_OUT_EXHAUST_FAN` | `PA9` | Digital Output PP | Exhaust Scrubber Blower Fan | Low (De-energized) |
 | `HAL_GPIO_OUT_DOOR_LOCK` | `PA10` | Digital Output PP | Solenoid Door Interlock Lock | Low (Unlocked) |
-| `HAL_ADC_CH_CHAMBER_TEMP` | `PA0` | `ADC1_IN0` (0-3.3V) | Chamber Temperature Sensor | ~25.0 Â°C (~750 mV) |
+| `HAL_ADC_CH_CHAMBER_TEMP` | `PA0` | `ADC1_IN0` (0-3.3V) | Chamber Temperature Sensor | ~25.0 °C (~750 mV) |
 | `HAL_ADC_CH_CHAMBER_HUMIDITY`| `PA4` | `ADC1_IN4` (0-3.3V) | Relative Humidity Sensor | ~50 %RH (~1650 mV) |
 | `HAL_ADC_CH_PROCESS_CONC` | `PC0` | `ADC1_IN10` (0-3.3V) | Active Gas Concentration | 0 PPM (0 mV) |
 | `HAL_ADC_CH_AMBIENT_SAFETY` | `PC1` | `ADC1_IN11` (0-3.3V) | Room Leak Detection Sensor | 0 PPM (0 mV) |
@@ -234,7 +234,7 @@ Offset  Field Name                  Type        Size   Description
 0x0C    dwell_soak_duration_s       uint16_t    2 B    Dwell soak duration (seconds)
 0x0E    post_purge_duration_s       uint16_t    2 B    Post-purge duration (seconds)
 0x10    target_concentration_ppm    uint16_t    2 B    Target concentration setpoint
-0x12    max_temperature_c           uint16_t    2 B    Max allowable chamber temp (Â°C)
+0x12    max_temperature_c           uint16_t    2 B    Max allowable chamber temp (°C)
 0x14    ambient_leak_limit_ppm      uint16_t    2 B    Room leak trip threshold (PPM)
 0x16    min_humidity_rh             uint16_t    2 B    Minimum humidity (% RH)
 0x18    modbus_slave_id             uint8_t     1 B    Modbus Node Address (1 - 247)
@@ -348,8 +348,8 @@ make sim
 | Criterion | Selected: Cooperative Multi-Rate Super-Loop | Alternative: FreeRTOS Architecture |
 | :--- | :--- | :--- |
 | **Execution Determinism** | **Guaranteed:** No preemption, zero race conditions on global state structs. | Requires mutexes, queues, and priority inversion mitigation. |
-| **SRAM Memory Usage** | **Minimal (<4 KB):** Single execution stack shared across all tasks. | Requires 512â€“2048 bytes of private stack per task. |
-| **Context Switch Overhead** | **Zero:** Direct function calls in linear sequence. | 40â€“80 CPU cycles per context switch. |
+| **SRAM Memory Usage** | **Minimal (<4 KB):** Single execution stack shared across all tasks. | Requires 512–2048 bytes of private stack per task. |
+| **Context Switch Overhead** | **Zero:** Direct function calls in linear sequence. | 40–80 CPU cycles per context switch. |
 | **Best Used For** | Mission-critical controllers, safety sequencers, and headless industrial nodes. | Heavy graphical displays (LVGL), TCP/IP stacks, and complex multi-threaded math. |
 
 ---
